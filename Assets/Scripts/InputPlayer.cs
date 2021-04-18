@@ -53,7 +53,7 @@ public class @InputPlayer : IInputActionCollection, IDisposable
             ],
             ""bindings"": [
                 {
-                    ""name"": ""1D Axis"",
+                    ""name"": ""Keyboard"",
                     ""id"": ""923db5a3-3b0b-4b30-b3f6-3d1a6253eb91"",
                     ""path"": ""1DAxis"",
                     ""interactions"": """",
@@ -86,9 +86,53 @@ public class @InputPlayer : IInputActionCollection, IDisposable
                     ""isPartOfComposite"": true
                 },
                 {
+                    ""name"": ""Gamepad"",
+                    ""id"": ""cb6db547-c1ab-4b2f-83c8-d5cf3ccb673e"",
+                    ""path"": ""1DAxis"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""MovementLeftRight"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""negative"",
+                    ""id"": ""c6c2d37e-b5f2-431a-ae8b-206c3e665e39"",
+                    ""path"": ""<Gamepad>/dpad/left"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PlayerScheme"",
+                    ""action"": ""MovementLeftRight"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""positive"",
+                    ""id"": ""a723dcb5-e165-42a6-ba4c-a331327a705d"",
+                    ""path"": ""<Gamepad>/dpad/right"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PlayerScheme"",
+                    ""action"": ""MovementLeftRight"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
                     ""name"": """",
                     ""id"": ""16d26cde-6cde-43b2-9406-79cd2a2defd5"",
                     ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PlayerScheme"",
+                    ""action"": ""Jump"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""14be6d62-9b48-4bf0-bfbe-5adebcbf8790"",
+                    ""path"": ""<Gamepad>/buttonSouth"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""PlayerScheme"",

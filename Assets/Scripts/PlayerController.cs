@@ -9,6 +9,10 @@ public class PlayerController : MonoBehaviour
     private InputPlayer input;
     private Rigidbody2D body;
 
+    [Header("Layers")]
+    [SerializeField]
+    private LayerMask groundLayer;
+
     [Header("Movement")]
     [SerializeField]
     float jumpVel;
@@ -16,9 +20,17 @@ public class PlayerController : MonoBehaviour
     float fallMult;
     [SerializeField]
     float shortJumpMult;
+    [SerializeField]
+    float maxSpeed;
 
     [Header("Booleans")]
     bool isJumping;
+    bool isFacingRight = true;
+    [SerializeField]
+    bool isGround = false;
+
+    [Header("Variables")]
+    float movInputCtx;
 
     void Awake()
     {
@@ -42,19 +54,15 @@ public class PlayerController : MonoBehaviour
 
     private void MovementLeftRight(InputAction.CallbackContext ctx)
     {
-
+        movInputCtx = ctx.ReadValue<float>();
+        if((isFacingRight && movInputCtx == -1) || (!isFacingRight && movInputCtx == 1))
+        {
+            Flip();
+        }
     }
 
     private void Jump(InputAction.CallbackContext ctx)
     {
-        /*if (!isReading)
-        {
-            isJumping = ctx.ReadValue<float>() == 0 ? false : true;
-        }
-        else
-        {
-            isJumping = false;
-        }*/
         isJumping = ctx.ReadValue<float>() == 0 ? false : true;
     }
 
@@ -70,16 +78,57 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (isJumping)
+        //Checking if player is in Ground
+        isGround = transform.Find("GroundChecker").GetComponent<GroundChecker>().isGrounded;
+
+        //Movement
+        if (movInputCtx == 0)
         {
-            if(body.velocity.y < 0)
+            body.velocity = new Vector2 (0, body.velocity.y);
+        }
+        else if (movInputCtx < 0)
+        {
+            if (isFacingRight)
             {
-                body.velocity += Vector2.up * Physics2D.gravity.y * (fallMult - 1) * Time.deltaTime; 
+                Flip();
             }
-            //else if (body.velocity.y > 0 )
-            body.velocity = Vector2.up * jumpVel;
+            isFacingRight = false;
+            body.velocity = new Vector2(-maxSpeed, body.velocity.y);
+        }
+        else
+        {
+            if (!isFacingRight)
+            {
+                Flip();
+            }
+            isFacingRight = true;
+            body.velocity = new Vector2(maxSpeed, body.velocity.y);
+        }
+
+        //Jumping
+        if (isJumping)
+        {         
+            if (isGround)
+            {
+                if (body.velocity.y < 0)
+                {
+                    body.velocity += Vector2.up * Physics2D.gravity.y * (fallMult - 1) * Time.deltaTime;
+                }
+                else if (body.velocity.y > 0)
+                {
+                    body.velocity = new Vector2(body.velocity.x, Vector2.up.y * jumpVel);
+                }           
+                else
+                {
+                    body.velocity = new Vector2(body.velocity.x, Vector2.up.y * jumpVel);
+                }
+            }
         }
     }
 
-
+    private void Flip()
+    {
+        isFacingRight = !isFacingRight;
+        transform.rotation = Quaternion.Euler(0, isFacingRight ? 0 : 180, 0);
+    }
 }
