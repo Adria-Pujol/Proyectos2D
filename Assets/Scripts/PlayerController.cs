@@ -24,7 +24,7 @@ public class PlayerController : MonoBehaviour
     float maxSpeed;
 
     [Header("Booleans")]
-    bool isFacingRight = true;
+    public bool isFacingRight = true;
     [SerializeField]
     bool isGround = false;
     bool isShortJump;
