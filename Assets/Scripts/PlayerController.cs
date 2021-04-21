@@ -24,19 +24,28 @@ public class PlayerController : MonoBehaviour
     float maxSpeed;
 
     [Header("Booleans")]
-    bool isJumping;
     bool isFacingRight = true;
     [SerializeField]
     bool isGround = false;
+    bool isShortJump;
+    bool isLongJump;
 
     [Header("Variables")]
     float movInputCtx;
+
+    public float holdTimer = 0;
+    public float timeHeld = 2;
+    public float jumpRemember = 0f;
+    public float jumpRememberTime = 0.1f;
+    public float groundRemember = 0f;
+    public float groundRememberTime = 0.88f;
 
     void Awake()
     {
         input = new InputPlayer();
         input.Player.MovementLeftRight.performed += ctx => MovementLeftRight(ctx);
-        input.Player.Jump.performed += ctx => Jump(ctx);
+        input.Player.Jump.started += ctx => JumpShort(ctx);
+        input.Player.Jump.performed += ctx => JumpLong(ctx);
         input.Player.Shoot.performed += ctx => Shoot(ctx);
         input.Player.Melee.performed += ctx => Melee(ctx);
         body = GetComponent<Rigidbody2D>();
@@ -61,9 +70,14 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void Jump(InputAction.CallbackContext ctx)
+    private void JumpShort(InputAction.CallbackContext ctx)
     {
-        isJumping = ctx.ReadValue<float>() == 0 ? false : true;
+        isShortJump = ctx.ReadValue<float>() == 0 ? false : true;
+    }
+
+    private void JumpLong(InputAction.CallbackContext ctx)
+    {
+        isLongJump = ctx.ReadValue<float>() == 0 ? false : true;
     }
 
     private void Shoot(InputAction.CallbackContext ctx)
@@ -106,25 +120,25 @@ public class PlayerController : MonoBehaviour
         }
 
         //Jumping
-        if (isJumping)
-        {         
-            if (isGround)
+        if (isGround)
+        {
+            if (isLongJump && isShortJump)
             {
-                if (body.velocity.y < 0)
-                {
-                    body.velocity += Vector2.up * Physics2D.gravity.y * (fallMult - 1) * Time.deltaTime;
-                }
-                else if (body.velocity.y > 0)
-                {
-                    body.velocity = new Vector2(body.velocity.x, Vector2.up.y * jumpVel);
-                }           
-                else
-                {
-                    body.velocity = new Vector2(body.velocity.x, Vector2.up.y * jumpVel);
-                }
+                body.velocity = new Vector2(body.velocity.x, jumpVel + 1);
+                Debug.Log("Long Jump");
+                isLongJump = false;
+                isShortJump = false;
             }
-        }
+            else if (isShortJump && !isLongJump)
+            {
+                body.velocity = new Vector2(body.velocity.x, jumpVel);
+                Debug.Log("Short Jump");
+                isLongJump = false;
+                isShortJump = false;
+            }
+        }        
     }
+
 
     private void Flip()
     {
