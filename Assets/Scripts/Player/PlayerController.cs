@@ -36,6 +36,7 @@ public class PlayerController : MonoBehaviour
     [Header("Variables")]
     float movInputCtx;
     public float timer;
+    public float timerReset = 0.2f;
     public float startTime;
     public float jumpRemember = 0f;
     public float jumpRememberTime = 0.1f;
@@ -173,8 +174,16 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
+            if(timerReset > 0)
+            {
+                timerReset -= Time.deltaTime;
+            }
+            else
+            {
+                resetShooting = true;
+                timerReset = 0.2f;
+            }            
             timer = startTime;
-            resetShooting = true;
         }
     }
 
