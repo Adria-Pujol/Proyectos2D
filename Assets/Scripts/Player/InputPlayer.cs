@@ -1,4 +1,4 @@
-// GENERATED AUTOMATICALLY FROM 'Assets/Scripts/InputPlayer.inputactions'
+// GENERATED AUTOMATICALLY FROM 'Assets/Scripts/Player/InputPlayer.inputactions'
 
 using System;
 using System.Collections;
@@ -28,11 +28,11 @@ public class @InputPlayer : IInputActionCollection, IDisposable
                 },
                 {
                     ""name"": ""Jump"",
-                    ""type"": ""PassThrough"",
+                    ""type"": ""Button"",
                     ""id"": ""5ef2a5f9-ed7c-4a52-be27-4995c789c5de"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
-                    ""interactions"": ""Hold""
+                    ""interactions"": """"
                 },
                 {
                     ""name"": ""Shoot"",
@@ -46,6 +46,22 @@ public class @InputPlayer : IInputActionCollection, IDisposable
                     ""name"": ""Melee"",
                     ""type"": ""PassThrough"",
                     ""id"": ""4a721fa7-2bec-4eb5-95bd-351ee503c75a"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Shift"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""d9722d6c-7104-4df8-a97d-c47510210bd3"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Control"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""d5200e8b-bd8c-4e39-ae69-b1768c46302b"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
@@ -131,17 +147,6 @@ public class @InputPlayer : IInputActionCollection, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""14be6d62-9b48-4bf0-bfbe-5adebcbf8790"",
-                    ""path"": ""<Gamepad>/buttonSouth"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""PlayerScheme"",
-                    ""action"": ""Jump"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""969fd704-6218-454b-817f-73151ff163dd"",
                     ""path"": ""<Keyboard>/j"",
                     ""interactions"": """",
@@ -159,6 +164,28 @@ public class @InputPlayer : IInputActionCollection, IDisposable
                     ""processors"": """",
                     ""groups"": ""PlayerScheme"",
                     ""action"": ""Melee"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""97685ed7-1708-454c-b0a4-7b86f40785e2"",
+                    ""path"": ""<Keyboard>/shift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PlayerScheme"",
+                    ""action"": ""Shift"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""bd4832eb-bebd-469e-9de9-5f05563ee073"",
+                    ""path"": ""<Keyboard>/ctrl"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PlayerScheme"",
+                    ""action"": ""Control"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -179,6 +206,8 @@ public class @InputPlayer : IInputActionCollection, IDisposable
         m_Player_Jump = m_Player.FindAction("Jump", throwIfNotFound: true);
         m_Player_Shoot = m_Player.FindAction("Shoot", throwIfNotFound: true);
         m_Player_Melee = m_Player.FindAction("Melee", throwIfNotFound: true);
+        m_Player_Shift = m_Player.FindAction("Shift", throwIfNotFound: true);
+        m_Player_Control = m_Player.FindAction("Control", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -232,6 +261,8 @@ public class @InputPlayer : IInputActionCollection, IDisposable
     private readonly InputAction m_Player_Jump;
     private readonly InputAction m_Player_Shoot;
     private readonly InputAction m_Player_Melee;
+    private readonly InputAction m_Player_Shift;
+    private readonly InputAction m_Player_Control;
     public struct PlayerActions
     {
         private @InputPlayer m_Wrapper;
@@ -240,6 +271,8 @@ public class @InputPlayer : IInputActionCollection, IDisposable
         public InputAction @Jump => m_Wrapper.m_Player_Jump;
         public InputAction @Shoot => m_Wrapper.m_Player_Shoot;
         public InputAction @Melee => m_Wrapper.m_Player_Melee;
+        public InputAction @Shift => m_Wrapper.m_Player_Shift;
+        public InputAction @Control => m_Wrapper.m_Player_Control;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -261,6 +294,12 @@ public class @InputPlayer : IInputActionCollection, IDisposable
                 @Melee.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMelee;
                 @Melee.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMelee;
                 @Melee.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMelee;
+                @Shift.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnShift;
+                @Shift.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnShift;
+                @Shift.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnShift;
+                @Control.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnControl;
+                @Control.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnControl;
+                @Control.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnControl;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -277,6 +316,12 @@ public class @InputPlayer : IInputActionCollection, IDisposable
                 @Melee.started += instance.OnMelee;
                 @Melee.performed += instance.OnMelee;
                 @Melee.canceled += instance.OnMelee;
+                @Shift.started += instance.OnShift;
+                @Shift.performed += instance.OnShift;
+                @Shift.canceled += instance.OnShift;
+                @Control.started += instance.OnControl;
+                @Control.performed += instance.OnControl;
+                @Control.canceled += instance.OnControl;
             }
         }
     }
@@ -296,5 +341,7 @@ public class @InputPlayer : IInputActionCollection, IDisposable
         void OnJump(InputAction.CallbackContext context);
         void OnShoot(InputAction.CallbackContext context);
         void OnMelee(InputAction.CallbackContext context);
+        void OnShift(InputAction.CallbackContext context);
+        void OnControl(InputAction.CallbackContext context);
     }
 }

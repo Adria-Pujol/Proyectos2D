@@ -15,11 +15,11 @@
                 },
                 {
                     "name": "Jump",
-                    "type": "PassThrough",
+                    "type": "Button",
                     "id": "5ef2a5f9-ed7c-4a52-be27-4995c789c5de",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": "Hold"
+                    "interactions": ""
                 },
                 {
                     "name": "Shoot",
@@ -33,6 +33,22 @@
                     "name": "Melee",
                     "type": "PassThrough",
                     "id": "4a721fa7-2bec-4eb5-95bd-351ee503c75a",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "Shift",
+                    "type": "PassThrough",
+                    "id": "d9722d6c-7104-4df8-a97d-c47510210bd3",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "Control",
+                    "type": "PassThrough",
+                    "id": "d5200e8b-bd8c-4e39-ae69-b1768c46302b",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
@@ -118,17 +134,6 @@
                 },
                 {
                     "name": "",
-                    "id": "14be6d62-9b48-4bf0-bfbe-5adebcbf8790",
-                    "path": "<Gamepad>/buttonSouth",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "PlayerScheme",
-                    "action": "Jump",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "969fd704-6218-454b-817f-73151ff163dd",
                     "path": "<Keyboard>/j",
                     "interactions": "",
@@ -146,6 +151,28 @@
                     "processors": "",
                     "groups": "PlayerScheme",
                     "action": "Melee",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "97685ed7-1708-454c-b0a4-7b86f40785e2",
+                    "path": "<Keyboard>/shift",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "PlayerScheme",
+                    "action": "Shift",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "bd4832eb-bebd-469e-9de9-5f05563ee073",
+                    "path": "<Keyboard>/ctrl",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "PlayerScheme",
+                    "action": "Control",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
