@@ -57,6 +57,11 @@ public class PlayerController : MonoBehaviour
     public bool isWall = false;
     public bool isShifting = false;
 
+    [Header("Confusion State")]
+    public bool confusionState = false;
+    public float confusionTimer;
+    public float confusionTotalTime;
+
     void Awake()
     {
         input = new InputPlayer();
@@ -130,35 +135,73 @@ public class PlayerController : MonoBehaviour
         isWall = transform.Find("WallChecker").GetComponent<WallChecker>().isWall;
 
         //Movement
-        if (!isWall)
+        if (confusionState)
         {
-            if (movInputCtx == 0)
+            if(confusionTimer <= 0)
             {
-                body.velocity = new Vector2(0, body.velocity.y);
-            }
-            else if (movInputCtx < 0)
-            {
-                if (isFacingRight)
-                {
-                    Flip();
-                }
-                isFacingRight = false;
-                body.velocity = new Vector2(-maxSpeed, body.velocity.y);
-            }
+                confusionState = false;
+            }     
             else
             {
-                if (!isFacingRight)
+                Debug.Log("Confusion");
+                if (movInputCtx == 0)
                 {
-                    Flip();
+                    body.velocity = new Vector2(0, body.velocity.y);
                 }
-                isFacingRight = true;
-                body.velocity = new Vector2(maxSpeed, body.velocity.y);
+                else if (movInputCtx < 0)
+                {
+                    if (!isFacingRight)
+                    {
+                        Flip();
+                    }
+                    isFacingRight = true;
+                    body.velocity = new Vector2(maxSpeed, body.velocity.y);
+                    Debug.Log("Velocity" + body.velocity);
+                }
+                else
+                {
+                    if (isFacingRight)
+                    {
+                        Flip();
+                    }
+                    isFacingRight = false;
+                    body.velocity = new Vector2(-maxSpeed, body.velocity.y);
+                }
+                confusionTimer -= Time.deltaTime;
             }
         }
         else
         {
-            body.velocity = new Vector2(0, body.velocity.y);
-        }
+            if (!isWall)
+            {
+                if (movInputCtx == 0)
+                {
+                    body.velocity = new Vector2(0, body.velocity.y);
+                }
+                else if (movInputCtx < 0)
+                {
+                    if (isFacingRight)
+                    {
+                        Flip();
+                    }
+                    isFacingRight = false;
+                    body.velocity = new Vector2(-maxSpeed, body.velocity.y);
+                }
+                else
+                {
+                    if (!isFacingRight)
+                    {
+                        Flip();
+                    }
+                    isFacingRight = true;
+                    body.velocity = new Vector2(maxSpeed, body.velocity.y);
+                }
+            }
+            else
+            {
+                body.velocity = new Vector2(0, body.velocity.y);
+            }
+        }   
 
         //Jumping
         if (isGround && isJumping)
@@ -246,6 +289,12 @@ public class PlayerController : MonoBehaviour
         {
             hasDashed = false;
         }
+    }
+
+    public void MakeConfusion()
+    {
+        confusionState = true;
+        confusionTimer = confusionTotalTime;
     }
 
     private void Flip()

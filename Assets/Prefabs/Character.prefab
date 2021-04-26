@@ -119,6 +119,7 @@ GameObject:
   - component: {fileID: 1272006245416237775}
   - component: {fileID: 7183049525195370735}
   - component: {fileID: 2851795789070740103}
+  - component: {fileID: 7140450959251257568}
   m_Layer: 0
   m_Name: Character
   m_TagString: Player
@@ -245,6 +246,9 @@ MonoBehaviour:
   - nameOfObjPool: Bullet
     prefab: {fileID: 2410756515044996789, guid: 368331c2c1cdbda418c50574596c13ba, type: 3}
     poolSize: 20
+  - nameOfObjPool: EnemyBullet
+    prefab: {fileID: 6474345749538438294, guid: 2b9a051026974804f941b695a3455371, type: 3}
+    poolSize: 20
 --- !u!114 &7183049525195370735
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -261,6 +265,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 0
   maxSpeed: 3
+  dashSpeed: 0
+  isFacingRight: 1
   isJumping: 0
   jumpVel: 10
   fallMult: 0
@@ -269,9 +275,19 @@ MonoBehaviour:
   startTime: 0.25
   jumpRemember: 0
   jumpRememberTime: 0.1
+  slideSpeed: 0
+  wallClimbSpeed: 0
+  jumpWallValX: 0
+  jumpWallValY: 0
+  wallTimer: 0
   isShooting: 0
   timerReset: 0.1
   isGround: 0
+  isWall: 0
+  isShifting: 0
+  confusionState: 0
+  confusionTimer: 0
+  confusionTotalTime: 0
 --- !u!70 &2851795789070740103
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -288,6 +304,19 @@ CapsuleCollider2D:
   m_Offset: {x: 0, y: 0}
   m_Size: {x: 1, y: 1.0000001}
   m_Direction: 0
+--- !u!114 &7140450959251257568
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8660466643929717836}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a0f59f1508dca6f45aa424441291aabb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  health: 100
 --- !u!1 &8660466645063709730
 GameObject:
   m_ObjectHideFlags: 0

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BulletScript : MonoBehaviour
+public class EnemyBullet : MonoBehaviour
 {
     [SerializeField]
     float bulletSpeed = 20f;
@@ -11,14 +11,15 @@ public class BulletScript : MonoBehaviour
     [SerializeField]
     Rigidbody2D body;
     [SerializeField]
-    float timeAlive = 5f;
+    float timeAlive = 1.5f;
     float timer;
     [SerializeField]
     public GameObject weapon;
+    public LayerMask groundLayer;
 
     void Start()
     {
-        timer = timeAlive;        
+        timer = timeAlive;
     }
 
     private void OnEnable()
@@ -45,13 +46,16 @@ public class BulletScript : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Enemy"))
+        if (collision.CompareTag("Player"))
         {
             Enemy enemy = collision.GetComponent<Enemy>();
+            PlayerController player = collision.GetComponent<PlayerController>();
 
             if (enemy != null)
             {
                 enemy.TakeDamage(bulletDamage);
+                player.MakeConfusion();
+                Debug.Log("Hit");
             }
             gameObject.SetActive(false);
         }
