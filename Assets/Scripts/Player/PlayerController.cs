@@ -19,7 +19,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     float dashSpeed;
     float movInputCtx;
-    bool isFacingRight = true;
+    public bool isFacingRight = true;
 
     [Header("Jumping")]
     [SerializeField]
@@ -207,33 +207,21 @@ public class PlayerController : MonoBehaviour
         }
 
         //Wall 
-        if (isWall && !isShifting && !isGround)
+        if (isWall && !isShifting)
         {
             body.velocity = new Vector2(body.velocity.x, -slideSpeed * Time.deltaTime);
         }
         else if (isWall && isShifting && !isGround)
         {
-            if (isJumping && wallTimer > 0)
+            isShooting = false;
+            if (movInputCtx != 0)
             {
-                if(movInputCtx > 0)
-                {
-                    body.velocity = new Vector2(-jumpWallValX, jumpWallValY);
-                }
-                else if (movInputCtx < 0)
-                {
-                    body.velocity = new Vector2(jumpWallValX, jumpWallValY);
-                }
-                else
-                {
-                    body.velocity = new Vector2(body.velocity.x, 0);
-                    body.gravityScale = 0;
-                }
+                body.velocity = new Vector2(body.velocity.x, jumpWallValY);
             }
             else
             {
                 body.velocity = new Vector2(body.velocity.x, 0);
                 body.gravityScale = 0;
-                wallTimer += Time.deltaTime;
             }                         
         }        
 

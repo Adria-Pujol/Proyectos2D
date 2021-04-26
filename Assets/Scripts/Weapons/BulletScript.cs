@@ -18,12 +18,20 @@ public class BulletScript : MonoBehaviour
 
     void Start()
     {
-        timer = timeAlive;
+        timer = timeAlive;        
+    }
+
+    private void OnEnable()
+    {
+        body.velocity = transform.right * bulletSpeed;
     }
 
     private void FixedUpdate()
     {
-        body.velocity = transform.right * bulletSpeed;
+        if (gameObject.activeInHierarchy)
+        {
+            body.velocity = transform.right * bulletSpeed;
+        }
         if (timer > 0)
         {
             timer -= Time.deltaTime;
