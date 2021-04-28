@@ -119,7 +119,7 @@ GameObject:
   - component: {fileID: 1272006245416237775}
   - component: {fileID: 7183049525195370735}
   - component: {fileID: 2851795789070740103}
-  - component: {fileID: 7140450959251257568}
+  - component: {fileID: 6110184999985409410}
   m_Layer: 0
   m_Name: Character
   m_TagString: Player
@@ -285,6 +285,7 @@ MonoBehaviour:
   isGround: 0
   isWall: 0
   isShifting: 0
+  isDead: 0
   confusionState: 0
   confusionTimer: 0
   confusionTotalTime: 2
@@ -304,7 +305,7 @@ CapsuleCollider2D:
   m_Offset: {x: 0, y: 0}
   m_Size: {x: 1, y: 1.0000001}
   m_Direction: 0
---- !u!114 &7140450959251257568
+--- !u!114 &6110184999985409410
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -313,12 +314,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 8660466643929717836}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a0f59f1508dca6f45aa424441291aabb, type: 3}
+  m_Script: {fileID: 11500000, guid: 8501d80ce38e6b6488f8033de4adb8fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   health: 100
-  invulnerabilityTime: 0
-  counter: 0
+  invulnerableTotalTime: 0
+  invulnerableCurrentTime: 0
+  canRecieveDmg: 0
+  respawnPosition: {fileID: 0}
 --- !u!1 &8660466645063709730
 GameObject:
   m_ObjectHideFlags: 0
@@ -392,7 +395,11 @@ MonoBehaviour:
   groundLayer:
     serializedVersion: 2
     m_Bits: 64
+  wallLayer:
+    serializedVersion: 2
+    m_Bits: 128
   isGrounded: 0
+  isTopWalled: 0
 --- !u!1 &8660466645087070267
 GameObject:
   m_ObjectHideFlags: 0

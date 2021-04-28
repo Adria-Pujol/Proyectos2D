@@ -52,10 +52,12 @@ public class PlayerController : MonoBehaviour
     [Header("Booleans")]       
     [SerializeField]
     bool isGround = false;
+    bool isTopWall = false;
     bool isDashing = false;
     bool hasDashed = false;
     public bool isWall = false;
     public bool isShifting = false;
+    public bool isDead = false;
 
     [Header("Confusion State")]
     public bool confusionState = false;
@@ -70,8 +72,8 @@ public class PlayerController : MonoBehaviour
         input.Player.Jump.canceled += ctx => Jump(ctx);
         input.Player.Shoot.performed += ctx => Shoot(ctx);
         input.Player.Melee.performed += ctx => Melee(ctx);
-        input.Player.Shift.performed += ctx => Shift(ctx);
-        input.Player.Control.performed += ctx => Control(ctx);
+        input.Player.GrabWall.performed += ctx => Shift(ctx);
+        input.Player.Dash.performed += ctx => Control(ctx);
         timer = startTime;
         body = GetComponent<Rigidbody2D>();
     }
@@ -131,34 +133,58 @@ public class PlayerController : MonoBehaviour
     {
         //Checking if player is in Ground
         isGround = transform.Find("GroundChecker").GetComponent<GroundChecker>().isGrounded;
+        isTopWall = transform.Find("GroundChecker").GetComponent<GroundChecker>().isTopWalled;
         //Checking if player is in Wall
         isWall = transform.Find("WallChecker").GetComponent<WallChecker>().isWall;
 
         //Movement
-        if (confusionState)
+        if (!isWall)
         {
-            if(confusionTimer <= 0)
+            if (confusionState)
             {
-                confusionState = false;
-            }     
+                if (isDead)
+                {
+                    confusionState = false;
+                    confusionTimer = 0;
+                }
+                if (confusionTimer <= 0)
+                {
+                    confusionState = false;
+                }
+                else
+                {
+                    if (movInputCtx == 0)
+                    {
+                        body.velocity = new Vector2(0, body.velocity.y);
+                    }
+                    else if (movInputCtx < 0)
+                    {
+                        if (!isFacingRight)
+                        {
+                            Flip();
+                        }
+                        isFacingRight = true;
+                        body.velocity = new Vector2(maxSpeed, body.velocity.y);
+                    }
+                    else
+                    {
+                        if (isFacingRight)
+                        {
+                            Flip();
+                        }
+                        isFacingRight = false;
+                        body.velocity = new Vector2(-maxSpeed, body.velocity.y);
+                    }
+                    confusionTimer -= Time.deltaTime;
+                }
+            }
             else
             {
-                Debug.Log("Confusion");
                 if (movInputCtx == 0)
                 {
                     body.velocity = new Vector2(0, body.velocity.y);
                 }
                 else if (movInputCtx < 0)
-                {
-                    if (!isFacingRight)
-                    {
-                        Flip();
-                    }
-                    isFacingRight = true;
-                    body.velocity = new Vector2(maxSpeed, body.velocity.y);
-                    Debug.Log("Velocity" + body.velocity);
-                }
-                else
                 {
                     if (isFacingRight)
                     {
@@ -167,26 +193,6 @@ public class PlayerController : MonoBehaviour
                     isFacingRight = false;
                     body.velocity = new Vector2(-maxSpeed, body.velocity.y);
                 }
-                confusionTimer -= Time.deltaTime;
-            }
-        }
-        else
-        {
-            if (!isWall)
-            {
-                if (movInputCtx == 0)
-                {
-                    body.velocity = new Vector2(0, body.velocity.y);
-                }
-                else if (movInputCtx < 0)
-                {
-                    if (isFacingRight)
-                    {
-                        Flip();
-                    }
-                    isFacingRight = false;
-                    body.velocity = new Vector2(-maxSpeed, body.velocity.y);
-                }
                 else
                 {
                     if (!isFacingRight)
@@ -197,14 +203,10 @@ public class PlayerController : MonoBehaviour
                     body.velocity = new Vector2(maxSpeed, body.velocity.y);
                 }
             }
-            else
-            {
-                body.velocity = new Vector2(0, body.velocity.y);
-            }
-        }   
+        }                
 
         //Jumping
-        if (isGround && isJumping)
+        if ((isGround && isJumping) || (isTopWall && isJumping))
         {
             body.velocity = new Vector2(body.velocity.x, jumpVel);
         }
@@ -250,11 +252,11 @@ public class PlayerController : MonoBehaviour
         }
 
         //Wall 
-        if (isWall && !isShifting)
+        if (isWall && !isShifting && !isTopWall)
         {
             body.velocity = new Vector2(body.velocity.x, -slideSpeed * Time.deltaTime);
         }
-        else if (isWall && isShifting && !isGround)
+        else if (isWall && isShifting && !isGround && !isTopWall)
         {
             isShooting = false;
             if (movInputCtx != 0)
@@ -295,6 +297,7 @@ public class PlayerController : MonoBehaviour
     {
         confusionState = true;
         confusionTimer = confusionTotalTime;
+        Debug.Log("Dong");
     }
 
     private void Flip()

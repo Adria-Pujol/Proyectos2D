@@ -51,7 +51,7 @@ public class @InputPlayer : IInputActionCollection, IDisposable
                     ""interactions"": """"
                 },
                 {
-                    ""name"": ""Shift"",
+                    ""name"": ""GrabWall"",
                     ""type"": ""PassThrough"",
                     ""id"": ""d9722d6c-7104-4df8-a97d-c47510210bd3"",
                     ""expectedControlType"": ""Button"",
@@ -59,7 +59,7 @@ public class @InputPlayer : IInputActionCollection, IDisposable
                     ""interactions"": """"
                 },
                 {
-                    ""name"": ""Control"",
+                    ""name"": ""Dash"",
                     ""type"": ""PassThrough"",
                     ""id"": ""d5200e8b-bd8c-4e39-ae69-b1768c46302b"",
                     ""expectedControlType"": ""Button"",
@@ -115,7 +115,7 @@ public class @InputPlayer : IInputActionCollection, IDisposable
                 {
                     ""name"": ""negative"",
                     ""id"": ""c6c2d37e-b5f2-431a-ae8b-206c3e665e39"",
-                    ""path"": ""<Gamepad>/dpad/left"",
+                    ""path"": ""<Gamepad>/leftStick/left"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""PlayerScheme"",
@@ -126,7 +126,7 @@ public class @InputPlayer : IInputActionCollection, IDisposable
                 {
                     ""name"": ""positive"",
                     ""id"": ""a723dcb5-e165-42a6-ba4c-a331327a705d"",
-                    ""path"": ""<Gamepad>/dpad/right"",
+                    ""path"": ""<Gamepad>/leftStick/right"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""PlayerScheme"",
@@ -147,8 +147,30 @@ public class @InputPlayer : IInputActionCollection, IDisposable
                 },
                 {
                     ""name"": """",
+                    ""id"": ""36c70b1b-6e41-4d64-89a6-f3cd90bb9380"",
+                    ""path"": ""<Gamepad>/buttonSouth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PlayerScheme"",
+                    ""action"": ""Jump"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""969fd704-6218-454b-817f-73151ff163dd"",
                     ""path"": ""<Keyboard>/j"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PlayerScheme"",
+                    ""action"": ""Shoot"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""552e9838-293e-44ea-8485-97c71f72a415"",
+                    ""path"": ""<Gamepad>/rightShoulder"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""PlayerScheme"",
@@ -169,23 +191,56 @@ public class @InputPlayer : IInputActionCollection, IDisposable
                 },
                 {
                     ""name"": """",
+                    ""id"": ""9f04c299-11de-498a-a9e2-19ca91cc29cd"",
+                    ""path"": ""<Gamepad>/buttonWest"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PlayerScheme"",
+                    ""action"": ""Melee"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""97685ed7-1708-454c-b0a4-7b86f40785e2"",
                     ""path"": ""<Keyboard>/shift"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""PlayerScheme"",
-                    ""action"": ""Shift"",
+                    ""action"": ""GrabWall"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""93862273-be7c-4054-8bb6-0e80d1b54d2f"",
+                    ""path"": ""<Gamepad>/rightTrigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PlayerScheme"",
+                    ""action"": ""GrabWall"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
                 {
                     ""name"": """",
                     ""id"": ""bd4832eb-bebd-469e-9de9-5f05563ee073"",
-                    ""path"": ""<Keyboard>/ctrl"",
+                    ""path"": ""<Keyboard>/q"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""PlayerScheme"",
-                    ""action"": ""Control"",
+                    ""action"": ""Dash"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""5cd09228-2012-43be-85d2-8f16b9fab006"",
+                    ""path"": ""<Gamepad>/leftTrigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PlayerScheme"",
+                    ""action"": ""Dash"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -206,8 +261,8 @@ public class @InputPlayer : IInputActionCollection, IDisposable
         m_Player_Jump = m_Player.FindAction("Jump", throwIfNotFound: true);
         m_Player_Shoot = m_Player.FindAction("Shoot", throwIfNotFound: true);
         m_Player_Melee = m_Player.FindAction("Melee", throwIfNotFound: true);
-        m_Player_Shift = m_Player.FindAction("Shift", throwIfNotFound: true);
-        m_Player_Control = m_Player.FindAction("Control", throwIfNotFound: true);
+        m_Player_GrabWall = m_Player.FindAction("GrabWall", throwIfNotFound: true);
+        m_Player_Dash = m_Player.FindAction("Dash", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -261,8 +316,8 @@ public class @InputPlayer : IInputActionCollection, IDisposable
     private readonly InputAction m_Player_Jump;
     private readonly InputAction m_Player_Shoot;
     private readonly InputAction m_Player_Melee;
-    private readonly InputAction m_Player_Shift;
-    private readonly InputAction m_Player_Control;
+    private readonly InputAction m_Player_GrabWall;
+    private readonly InputAction m_Player_Dash;
     public struct PlayerActions
     {
         private @InputPlayer m_Wrapper;
@@ -271,8 +326,8 @@ public class @InputPlayer : IInputActionCollection, IDisposable
         public InputAction @Jump => m_Wrapper.m_Player_Jump;
         public InputAction @Shoot => m_Wrapper.m_Player_Shoot;
         public InputAction @Melee => m_Wrapper.m_Player_Melee;
-        public InputAction @Shift => m_Wrapper.m_Player_Shift;
-        public InputAction @Control => m_Wrapper.m_Player_Control;
+        public InputAction @GrabWall => m_Wrapper.m_Player_GrabWall;
+        public InputAction @Dash => m_Wrapper.m_Player_Dash;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -294,12 +349,12 @@ public class @InputPlayer : IInputActionCollection, IDisposable
                 @Melee.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMelee;
                 @Melee.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMelee;
                 @Melee.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMelee;
-                @Shift.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnShift;
-                @Shift.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnShift;
-                @Shift.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnShift;
-                @Control.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnControl;
-                @Control.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnControl;
-                @Control.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnControl;
+                @GrabWall.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnGrabWall;
+                @GrabWall.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnGrabWall;
+                @GrabWall.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnGrabWall;
+                @Dash.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnDash;
+                @Dash.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnDash;
+                @Dash.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnDash;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -316,12 +371,12 @@ public class @InputPlayer : IInputActionCollection, IDisposable
                 @Melee.started += instance.OnMelee;
                 @Melee.performed += instance.OnMelee;
                 @Melee.canceled += instance.OnMelee;
-                @Shift.started += instance.OnShift;
-                @Shift.performed += instance.OnShift;
-                @Shift.canceled += instance.OnShift;
-                @Control.started += instance.OnControl;
-                @Control.performed += instance.OnControl;
-                @Control.canceled += instance.OnControl;
+                @GrabWall.started += instance.OnGrabWall;
+                @GrabWall.performed += instance.OnGrabWall;
+                @GrabWall.canceled += instance.OnGrabWall;
+                @Dash.started += instance.OnDash;
+                @Dash.performed += instance.OnDash;
+                @Dash.canceled += instance.OnDash;
             }
         }
     }
@@ -341,7 +396,7 @@ public class @InputPlayer : IInputActionCollection, IDisposable
         void OnJump(InputAction.CallbackContext context);
         void OnShoot(InputAction.CallbackContext context);
         void OnMelee(InputAction.CallbackContext context);
-        void OnShift(InputAction.CallbackContext context);
-        void OnControl(InputAction.CallbackContext context);
+        void OnGrabWall(InputAction.CallbackContext context);
+        void OnDash(InputAction.CallbackContext context);
     }
 }

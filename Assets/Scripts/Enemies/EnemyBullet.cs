@@ -48,14 +48,13 @@ public class EnemyBullet : MonoBehaviour
     {
         if (collision.CompareTag("Player"))
         {
-            Enemy enemy = collision.GetComponent<Enemy>();
+            PlayerHealth playerHP = collision.GetComponent<PlayerHealth>();
             PlayerController player = collision.GetComponent<PlayerController>();
 
-            if (enemy != null)
+            if (playerHP != null)
             {
-                enemy.TakeDamage(bulletDamage);
+                playerHP.TakeDamage(bulletDamage);
                 player.MakeConfusion();
-                Debug.Log("Hit");
             }
             gameObject.SetActive(false);
         }
