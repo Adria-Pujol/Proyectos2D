@@ -248,8 +248,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2494317}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -9.4, y: 6.01, z: 0}
-  m_LocalScale: {x: 1, y: 18.963, z: 1}
+  m_LocalPosition: {x: -17.1352, y: 6.01, z: 0}
+  m_LocalScale: {x: 16.4704, y: 18.963, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 6
@@ -397,6 +397,7 @@ GameObject:
   - component: {fileID: 1066055911}
   - component: {fileID: 1066055910}
   - component: {fileID: 1066055913}
+  - component: {fileID: 1066055914}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -437,9 +438,9 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 60
-  orthographic: 0
-  orthographic size: 5
+  field of view: 16.232304
+  orthographic: 1
+  orthographic size: 6.515274
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -463,7 +464,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1066055909}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: -10}
+  m_LocalPosition: {x: -4.36, y: 4.4, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -501,6 +502,21 @@ MonoBehaviour:
   m_RequiresDepthTexture: 0
   m_RequiresColorTexture: 0
   m_Version: 2
+--- !u!114 &1066055914
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1066055909}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f1f710b5b62fd7c479d2078af0cf76ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 1737107880}
+  offset: {x: 0, y: 0, z: -10}
+  smoothFactor: 5.42
 --- !u!1 &1366790737
 GameObject:
   m_ObjectHideFlags: 0
@@ -693,6 +709,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c2e2935d11d4a4b459ede18d77669664, type: 3}
+--- !u!4 &1737107880 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8660466643929718192, guid: 2682f50dbcf14b444a056028508cf931, type: 3}
+  m_PrefabInstance: {fileID: 8660466645000315059}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2005631880
 GameObject:
   m_ObjectHideFlags: 0
@@ -803,47 +824,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7140450959251257568, guid: 2682f50dbcf14b444a056028508cf931, type: 3}
       propertyPath: health
-      value: 1e+12
-      objectReference: {fileID: 0}
-    - target: {fileID: 7183049525195370735, guid: 2682f50dbcf14b444a056028508cf931, type: 3}
-      propertyPath: fallMult
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 7183049525195370735, guid: 2682f50dbcf14b444a056028508cf931, type: 3}
-      propertyPath: maxSpeed
-      value: 7
-      objectReference: {fileID: 0}
-    - target: {fileID: 7183049525195370735, guid: 2682f50dbcf14b444a056028508cf931, type: 3}
-      propertyPath: dashSpeed
       value: 100
-      objectReference: {fileID: 0}
-    - target: {fileID: 7183049525195370735, guid: 2682f50dbcf14b444a056028508cf931, type: 3}
-      propertyPath: slideSpeed
-      value: 100
-      objectReference: {fileID: 0}
-    - target: {fileID: 7183049525195370735, guid: 2682f50dbcf14b444a056028508cf931, type: 3}
-      propertyPath: jumpWallValX
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 7183049525195370735, guid: 2682f50dbcf14b444a056028508cf931, type: 3}
-      propertyPath: jumpWallValY
-      value: 7
-      objectReference: {fileID: 0}
-    - target: {fileID: 7183049525195370735, guid: 2682f50dbcf14b444a056028508cf931, type: 3}
-      propertyPath: shortJumpMult
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 7183049525195370735, guid: 2682f50dbcf14b444a056028508cf931, type: 3}
-      propertyPath: wallClimbSpeed
-      value: 20
-      objectReference: {fileID: 0}
-    - target: {fileID: 7183049525195370735, guid: 2682f50dbcf14b444a056028508cf931, type: 3}
-      propertyPath: confusionTotalTime
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 7183049525195370735, guid: 2682f50dbcf14b444a056028508cf931, type: 3}
-      propertyPath: groundLayer.m_Bits
-      value: 64
       objectReference: {fileID: 0}
     - target: {fileID: 8660466643929717836, guid: 2682f50dbcf14b444a056028508cf931, type: 3}
       propertyPath: m_Name

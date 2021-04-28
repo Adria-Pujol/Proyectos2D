@@ -216,7 +216,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!114 &9130113226339810163
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -263,22 +263,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   groundLayer:
     serializedVersion: 2
-    m_Bits: 0
-  maxSpeed: 3
-  dashSpeed: 0
+    m_Bits: 64
+  maxSpeed: 7
+  dashSpeed: 100
   isFacingRight: 1
   isJumping: 0
   jumpVel: 10
-  fallMult: 0
-  shortJumpMult: 0
+  fallMult: 2
+  shortJumpMult: 4
   timer: 0
   startTime: 0.25
   jumpRemember: 0
   jumpRememberTime: 0.1
-  slideSpeed: 0
-  wallClimbSpeed: 0
-  jumpWallValX: 0
-  jumpWallValY: 0
+  slideSpeed: 100
+  wallClimbSpeed: 20
+  jumpWallValX: 5
+  jumpWallValY: 7
   wallTimer: 0
   isShooting: 0
   timerReset: 0.1
@@ -287,7 +287,7 @@ MonoBehaviour:
   isShifting: 0
   confusionState: 0
   confusionTimer: 0
-  confusionTotalTime: 0
+  confusionTotalTime: 2
 --- !u!70 &2851795789070740103
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -317,6 +317,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 100
+  invulnerabilityTime: 0
+  counter: 0
 --- !u!1 &8660466645063709730
 GameObject:
   m_ObjectHideFlags: 0
