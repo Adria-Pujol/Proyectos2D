@@ -36,7 +36,7 @@ namespace Player
         [Header("Shooting")] [SerializeField] private bool isShooting;
 
         public float timerReset = 0.2f;
-        public int activeWeapon = 0;
+        public int activeWeapon = 1;
 
         [Header("Melee")] [SerializeField] private bool isHitting;
 
