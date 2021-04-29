@@ -138,4 +138,4 @@ MonoBehaviour:
   bulletDamage: 20
   body: {fileID: 2813966152927143185}
   timeAlive: 5
-  weapon: {fileID: 8660466643929717836, guid: 2682f50dbcf14b444a056028508cf931, type: 3}
+  timeAliveFromCollision: 0.03

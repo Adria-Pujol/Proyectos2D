@@ -1,337 +1,312 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerController : MonoBehaviour
+namespace Player
 {
-    private InputPlayer input;
-    private Rigidbody2D body;
-
-    [Header("Layers")]
-    [SerializeField]
-    private LayerMask groundLayer;
-
-    [Header("Movement")]
-    [SerializeField]
-    float maxSpeed;
-    [SerializeField]
-    float dashSpeed;
-    float movInputCtx;
-    public bool isFacingRight = true;
-
-    [Header("Jumping")]
-    [SerializeField]
-    bool isJumping;
-    [SerializeField]
-    float jumpVel;
-    [SerializeField]
-    float fallMult;
-    [SerializeField]
-    float shortJumpMult;
-    public float timer;
-    public float startTime;
-    public float jumpRemember = 0f;
-    public float jumpRememberTime = 0.1f;
-
-    [Header("Wall")]
-    [SerializeField]
-    float slideSpeed;
-    public float wallClimbSpeed;
-    public float jumpWallValX;
-    public float jumpWallValY;
-    public float wallTimer;
-
-    [Header("Shooting")]
-    [SerializeField]
-    bool isShooting;
-    bool resetShooting = true;
-    public float timerReset = 0.2f;
-    
-    [Header("Melee")]
-    [SerializeField]
-    bool isHitting;
-    [SerializeField]
-    bool hasBeenPressed = false;
-
-    [Header("Booleans")]       
-    [SerializeField]
-    bool isGround = false;
-    bool isTopWall = false;
-    bool isDashing = false;
-    bool hasDashed = false;
-    public bool isWall = false;
-    public bool isShifting = false;
-    public bool isDead = false;
-
-    [Header("Confusion State")]
-    public bool confusionState = false;
-    public float confusionTimer;
-    public float confusionTotalTime;
-
-    void Awake()
+    public class PlayerController : MonoBehaviour
     {
-        input = new InputPlayer();
-        input.Player.MovementLeftRight.performed += ctx => MovementLeftRight(ctx);
-        input.Player.Jump.started += ctx => Jump(ctx);
-        input.Player.Jump.canceled += ctx => Jump(ctx);
-        input.Player.Shoot.performed += ctx => Shoot(ctx);
-        input.Player.Melee.performed += ctx => Melee(ctx);
-        input.Player.GrabWall.performed += ctx => Shift(ctx);
-        input.Player.Dash.performed += ctx => Control(ctx);
-        timer = startTime;
-        body = GetComponent<Rigidbody2D>();
-    }
+        [Header("Layers")] [SerializeField] private LayerMask groundLayer;
 
-    private void OnEnable()
-    {
-        input.Enable();
-    }
+        [Header("Movement")] [SerializeField] private float maxSpeed;
 
-    private void OnDisable()
-    {
-        input.Disable();
-    }
+        [SerializeField] private float dashSpeed;
 
-    private void MovementLeftRight(InputAction.CallbackContext ctx)
-    {
-        movInputCtx = ctx.ReadValue<float>();
-        if((isFacingRight && movInputCtx < 0) || (!isFacingRight && movInputCtx > 0))
+        public bool isFacingRight = true;
+
+        [Header("Jumping")] [SerializeField] private bool isJumping;
+
+        [SerializeField] private float jumpVel;
+
+        [SerializeField] private float fallMult;
+
+        [SerializeField] private float shortJumpMult;
+
+        public float timer;
+        public float startTime;
+        public float jumpRemember;
+        public float jumpRememberTime = 0.1f;
+
+        [Header("Wall")] [SerializeField] private float slideSpeed;
+
+        public float wallClimbSpeed;
+        public float jumpWallValX;
+        public float jumpWallValY;
+        public float wallTimer;
+
+        [Header("Shooting")] [SerializeField] private bool isShooting;
+
+        public float timerReset = 0.2f;
+
+        [Header("Melee")] [SerializeField] private bool isHitting;
+
+        [SerializeField] private bool hasBeenPressed;
+
+        [Header("Booleans")] [SerializeField] private bool isGround;
+
+        public bool isWall;
+        public bool isShifting;
+        public bool isDead;
+
+        [Header("Confusion State")] public bool confusionState;
+
+        public float confusionTimer;
+        public float confusionTotalTime;
+        private Rigidbody2D _body;
+        private bool _hasDashed;
+        private InputPlayer _input;
+        private bool _isDashing;
+        private bool _isTopWall;
+        private float _movInputCtx;
+        private bool _resetShooting = true;
+        private WeaponScript _weaponScript;
+        private WallChecker _wallChecker;
+        private GroundChecker _groundChecker;
+        private GroundChecker _groundChecker1;
+
+        private void Awake()
         {
-            Flip();
+            _input = new InputPlayer();
+            _input.Player.MovementLeftRight.performed += ctx => MovementLeftRight(ctx);
+            _input.Player.Jump.started += ctx => Jump(ctx);
+            _input.Player.Jump.canceled += ctx => Jump(ctx);
+            _input.Player.Shoot.performed += ctx => Shoot(ctx);
+            _input.Player.Melee.performed += ctx => Melee(ctx);
+            _input.Player.GrabWall.performed += ctx => Shift(ctx);
+            _input.Player.Dash.performed += ctx => Control(ctx);
+            timer = startTime;
+            _body = GetComponent<Rigidbody2D>();
+            _groundChecker1 = transform.Find("GroundChecker").GetComponent<GroundChecker>();
+            _groundChecker = transform.Find("GroundChecker").GetComponent<GroundChecker>();
+            _wallChecker = transform.Find("WallChecker").GetComponent<WallChecker>();
+            _weaponScript = gameObject.GetComponent<WeaponScript>();
         }
-    }
 
-    private void Jump(InputAction.CallbackContext ctx)
-    {
-        if (ctx.phase == InputActionPhase.Started)
+        private void FixedUpdate()
         {
-            isJumping = true;
-        }
-        if (ctx.phase == InputActionPhase.Canceled)
-        {
-            isJumping = false;
-        }
-    }
+            //Checking if player is in Ground
+            isGround = _groundChecker1.isGrounded;
+            //Checking if player is in TopWall
+            _isTopWall = _groundChecker.isTopWalled;
+            //Checking if player is in Wall
+            isWall = _wallChecker.isWall;
 
-    private void Shoot(InputAction.CallbackContext ctx)
-    {
-        isShooting = ctx.ReadValue<float>() == 0 ? false : true;
-    }
-
-    private void Melee(InputAction.CallbackContext ctx)
-    {
-        isHitting = ctx.ReadValue<float>() == 0 ? false : true;
-    }
-
-    private void Shift(InputAction.CallbackContext ctx)
-    {
-        isShifting = ctx.ReadValue<float>() == 0 ? false : true;
-    }
-
-    private void Control(InputAction.CallbackContext ctx)
-    {
-        isDashing = ctx.ReadValue<float>() == 0 ? false : true;
-    }
-
-    private void FixedUpdate()
-    {
-        //Checking if player is in Ground
-        isGround = transform.Find("GroundChecker").GetComponent<GroundChecker>().isGrounded;
-        //Checking if player is in TopWall
-        isTopWall = transform.Find("GroundChecker").GetComponent<GroundChecker>().isTopWalled;
-        //Checking if player is in Wall
-        isWall = transform.Find("WallChecker").GetComponent<WallChecker>().isWall;
-
-        //Movement
-        if (!isWall)
-        {
-            if (confusionState)
+            //Movement
+            if (!isWall)
             {
-                if (isDead)
+                if (confusionState)
                 {
-                    confusionState = false;
-                    confusionTimer = 0;
-                }
-                if (confusionTimer <= 0)
-                {
-                    confusionState = false;
-                }
-                else
-                {
-                    if (movInputCtx == 0)
+                    if (isDead)
                     {
-                        body.velocity = new Vector2(0, body.velocity.y);
+                        confusionState = false;
+                        confusionTimer = 0;
                     }
-                    else if (movInputCtx < 0)
+
+                    if (confusionTimer <= 0)
                     {
-                        if (!isFacingRight)
-                        {
-                            Flip();
-                        }
-                        isFacingRight = true;
-                        body.velocity = new Vector2(maxSpeed, body.velocity.y);
+                        confusionState = false;
                     }
                     else
                     {
-                        if (isFacingRight)
+                        if (_movInputCtx == 0)
                         {
-                            Flip();
+                            _body.velocity = new Vector2(0, _body.velocity.y);
                         }
-                        isFacingRight = false;
-                        body.velocity = new Vector2(-maxSpeed, body.velocity.y);
+                        else if (_movInputCtx < 0)
+                        {
+                            if (!isFacingRight) Flip();
+                            isFacingRight = true;
+                            _body.velocity = new Vector2(maxSpeed, _body.velocity.y);
+                        }
+                        else
+                        {
+                            if (isFacingRight) Flip();
+                            isFacingRight = false;
+                            _body.velocity = new Vector2(-maxSpeed, _body.velocity.y);
+                        }
+
+                        confusionTimer -= Time.deltaTime;
                     }
-                    confusionTimer -= Time.deltaTime;
+                }
+                else
+                {
+                    if (_movInputCtx == 0)
+                    {
+                        _body.velocity = new Vector2(0, _body.velocity.y);
+                    }
+                    else if (_movInputCtx < 0)
+                    {
+                        if (isFacingRight) Flip();
+                        isFacingRight = false;
+                        _body.velocity = new Vector2(-maxSpeed, _body.velocity.y);
+                    }
+                    else
+                    {
+                        if (!isFacingRight) Flip();
+                        isFacingRight = true;
+                        _body.velocity = new Vector2(maxSpeed, _body.velocity.y);
+                    }
+                }
+            }
+
+            //Jumping
+            if (isGround && isJumping || _isTopWall && isJumping) _body.velocity = new Vector2(_body.velocity.x, jumpVel);
+            if (isJumping && _body.velocity.y > 0)
+                _body.gravityScale = fallMult;
+            else
+                _body.gravityScale = shortJumpMult;
+
+            //Shooting
+            if (isShooting)
+            {
+                if (_resetShooting)
+                {
+                    _weaponScript.Shoot();
+                    _resetShooting = false;
+                }
+
+                if (timer <= 0)
+                {
+                    _weaponScript.Shoot();
+                    timer = startTime;
+                }
+                else
+                {
+                    timer -= Time.deltaTime;
                 }
             }
             else
             {
-                if (movInputCtx == 0)
+                if (timerReset > 0)
                 {
-                    body.velocity = new Vector2(0, body.velocity.y);
-                }
-                else if (movInputCtx < 0)
-                {
-                    if (isFacingRight)
-                    {
-                        Flip();
-                    }
-                    isFacingRight = false;
-                    body.velocity = new Vector2(-maxSpeed, body.velocity.y);
+                    timerReset -= Time.deltaTime;
                 }
                 else
                 {
-                    if (!isFacingRight)
-                    {
-                        Flip();
-                    }
-                    isFacingRight = true;
-                    body.velocity = new Vector2(maxSpeed, body.velocity.y);
+                    _resetShooting = true;
+                    timerReset = 0.2f;
                 }
-            }
-        }                
 
-        //Jumping
-        if ((isGround && isJumping) || (isTopWall && isJumping))
-        {
-            body.velocity = new Vector2(body.velocity.x, jumpVel);
-        }
-        if (isJumping && body.velocity.y > 0)
-        {
-            body.gravityScale = fallMult;
-        }
-        else
-        {
-            body.gravityScale = shortJumpMult;
-        }
-
-        //Shooting
-        if (isShooting)
-        {
-            if (resetShooting)
-            {
-                gameObject.GetComponent<WeaponScript>().Shoot();
-                resetShooting = false;
-            }
-            if(timer <= 0)
-            {
-                gameObject.GetComponent<WeaponScript>().Shoot();                
                 timer = startTime;
             }
-            else
-            {
-                timer -= Time.deltaTime;
-            }            
-        }
-        else
-        {
-            if(timerReset > 0)
-            {
-                timerReset -= Time.deltaTime;
-            }
-            else
-            {
-                resetShooting = true;
-                timerReset = 0.2f;
-            }            
-            timer = startTime;
-        }
 
-        //Wall 
-        if (isWall && !isShifting && !isTopWall)
-        {
-            body.velocity = new Vector2(body.velocity.x, -slideSpeed * Time.deltaTime);
-        }
-        else if (isWall && isShifting && !isGround && !isTopWall)
-        {
-            isShooting = false;
-            if (movInputCtx != 0)
+            //Wall 
+            switch (isWall)
             {
-                body.velocity = new Vector2(body.velocity.x, jumpWallValY);
-            }
-            else
-            {
-                body.velocity = new Vector2(body.velocity.x, 0);
-                body.gravityScale = 0;
-            }                         
-        }        
+                case true when !isShifting && !_isTopWall:
+                    _body.velocity = new Vector2(_body.velocity.x, -slideSpeed * Time.deltaTime);
+                    break;
+                case true when isShifting && !isGround && !_isTopWall:
+                {
+                    isShooting = false;
+                    if (_movInputCtx != 0)
+                    {
+                        _body.velocity = new Vector2(_body.velocity.x, jumpWallValY);
+                    }
+                    else
+                    {
+                        _body.velocity = new Vector2(_body.velocity.x, 0);
+                        _body.gravityScale = 0;
+                    }
 
-        //Dash
-        if (isGround && isDashing)
-        {
-            if (!hasDashed)
+                    break;
+                }
+            }
+
+            //Dash
+            if (isGround && _isDashing)
             {
+                if (_hasDashed) return;
                 if (isFacingRight)
                 {
-                    body.velocity = new Vector2(dashSpeed, body.velocity.y);
-                    hasDashed = true;
+                    _body.velocity = new Vector2(dashSpeed, _body.velocity.y);
+                    _hasDashed = true;
                 }
                 else
                 {
-                    body.velocity = new Vector2(-dashSpeed, body.velocity.y);
-                    hasDashed = true;
+                    _body.velocity = new Vector2(-dashSpeed, _body.velocity.y);
+                    _hasDashed = true;
                 }
-            }        
-        }
-        else
-        {
-            hasDashed = false;
-        }
-    }
-
-    public void OnTriggerStay2D(Collider2D collision)
-    {
-        //Flip Object
-        if (collision.CompareTag("Object"))
-        {
-            if (isHitting && !hasBeenPressed)
+            }
+            else
             {
-                Transform objTransform = collision.GetComponent<Transform>();
-                objTransform.rotation = new Quaternion(objTransform.rotation.x, objTransform.rotation.y, -90,
-                    -90);
-                hasBeenPressed = true;
+                _hasDashed = false;
             }
         }
-    }
 
-    public void OnTriggerExit2D(Collider2D collision)
-    {
-        if (collision.CompareTag("Object"))
+        private void OnEnable()
         {
-            hasBeenPressed = false;
+            _input.Enable();
         }
-    }
 
-    public void MakeConfusion()
-    {
-        confusionState = true;
-        confusionTimer = confusionTotalTime;
-    }
+        private void OnDisable()
+        {
+            _input.Disable();
+        }
 
-    private void Flip()
-    {
-        isFacingRight = !isFacingRight;
-        transform.rotation = Quaternion.Euler(0, isFacingRight ? 0 : 180, 0);
+        public void OnTriggerExit2D(Collider2D collision)
+        {
+            if (collision.CompareTag("Object")) hasBeenPressed = false;
+        }
+
+        public void OnTriggerStay2D(Collider2D collision)
+        {
+            //Flip Object
+            if (!collision.CompareTag("Object")) return;
+            if (!isHitting || hasBeenPressed) return;
+            var objTransform = collision.GetComponent<Transform>();
+            var rotation = objTransform.rotation;
+            rotation = new Quaternion(rotation.x, rotation.y, -90,
+                -90);
+            objTransform.rotation = rotation;
+            hasBeenPressed = true;
+        }
+
+        private void MovementLeftRight(InputAction.CallbackContext ctx)
+        {
+            _movInputCtx = ctx.ReadValue<float>();
+            if (isFacingRight && _movInputCtx < 0 || !isFacingRight && _movInputCtx > 0) Flip();
+        }
+
+        private void Jump(InputAction.CallbackContext ctx)
+        {
+            isJumping = ctx.phase switch
+            {
+                InputActionPhase.Started => true,
+                InputActionPhase.Canceled => false,
+                _ => isJumping
+            };
+        }
+
+        private void Shoot(InputAction.CallbackContext ctx)
+        {
+            isShooting = ctx.ReadValue<float>() != 0;
+        }
+
+        private void Melee(InputAction.CallbackContext ctx)
+        {
+            isHitting = ctx.ReadValue<float>() != 0;
+        }
+
+        private void Shift(InputAction.CallbackContext ctx)
+        {
+            isShifting = ctx.ReadValue<float>() != 0;
+        }
+
+        private void Control(InputAction.CallbackContext ctx)
+        {
+            _isDashing = ctx.ReadValue<float>() != 0;
+        }
+
+        public void MakeConfusion()
+        {
+            confusionState = true;
+            confusionTimer = confusionTotalTime;
+        }
+
+        private void Flip()
+        {
+            isFacingRight = !isFacingRight;
+            transform.rotation = Quaternion.Euler(0, isFacingRight ? 0 : 180, 0);
+        }
     }
 }

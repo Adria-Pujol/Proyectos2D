@@ -1,103 +1,86 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerHealth : MonoBehaviour
+namespace Player
 {
-    public float health = 7f;
-    public float knockback;
-    public float invulnerableTotalTime;
-    public float invulnerableCurrentTime;
-    public bool canRecieveDmg;
-    public Transform respawnPosition;
-
-    private Rigidbody2D body;
-
-    public void Awake()
+    public class PlayerHealth : MonoBehaviour
     {
-        invulnerableCurrentTime = invulnerableTotalTime;
-        body = GetComponent<Rigidbody2D>();
-    }
+        public float health = 7f;
+        public float knockback;
+        public float invulnerableTotalTime;
+        public float invulnerableCurrentTime;
+        public bool canRecieveDmg;
+        public Transform respawnPosition;
 
-    public void FixedUpdate()
-    {
-        if (invulnerableCurrentTime < invulnerableTotalTime)
-        {
-            invulnerableCurrentTime += Time.deltaTime;
-        }
-        else
-        {
-            canRecieveDmg = true;
-        }
-    }
+        private Rigidbody2D _body;
 
-    public void TakeDamage(float dmg)
-    {
-        if (canRecieveDmg)
+        public void Awake()
         {
-            health -= dmg;
-            invulnerableCurrentTime = 0f;
-            canRecieveDmg = false;
+            invulnerableCurrentTime = invulnerableTotalTime;
+            _body = GetComponent<Rigidbody2D>();
         }
 
-        if (health <= 0)
+        public void FixedUpdate()
         {
-            Death();
+            if (invulnerableCurrentTime < invulnerableTotalTime)
+                invulnerableCurrentTime += Time.deltaTime;
+            else
+                canRecieveDmg = true;
         }
-    }
 
-    public void Death()
-    {
-        gameObject.transform.position = respawnPosition.position;
-        gameObject.GetComponent<PlayerController>().isDead = true;
-        health = 7f;
-    }
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.CompareTag("Enemy"))
+        private void OnTriggerEnter2D(Collider2D collision)
         {
+            if (!collision.CompareTag("Enemy")) return;
             if (canRecieveDmg)
             {
                 health -= 1;
                 invulnerableCurrentTime = 0f;
                 canRecieveDmg = false;
-                body.AddForce(new Vector2(-knockback * 20, knockback));
+                _body.AddForce(new Vector2(-knockback * 20, knockback));
             }
-            if (health <= 0)
-            {
-                Death();
-            }
-        }
-    }
 
-    private void OnTriggerStay2D(Collider2D collision)
-    {
-        if (collision.CompareTag("Enemy"))
+            if (health <= 0) Death();
+        }
+
+        private void OnTriggerExit2D(Collider2D collision)
         {
+            if (collision.CompareTag("Enemy")) invulnerableCurrentTime += Time.deltaTime;
+        }
+
+        private void OnTriggerStay2D(Collider2D collision)
+        {
+            if (!collision.CompareTag("Enemy")) return;
             if (canRecieveDmg)
-            {                
+            {
                 health -= 1;
                 invulnerableCurrentTime = 0f;
                 canRecieveDmg = false;
-                body.AddForce(new Vector2(-knockback * 20, knockback));
+                _body.AddForce(new Vector2(-knockback * 20, knockback));
             }
             else
             {
                 invulnerableCurrentTime += Time.deltaTime;
             }
-            if (health <= 0)
-            {
-                Death();
-            }
-        }
-    }
 
-    private void OnTriggerExit2D(Collider2D collision)
-    {
-        if (collision.CompareTag("Enemy"))
+            if (health <= 0) Death();
+        }
+
+        public void TakeDamage(float dmg)
         {
-            invulnerableCurrentTime += Time.deltaTime;
+            if (canRecieveDmg)
+            {
+                health -= dmg;
+                invulnerableCurrentTime = 0f;
+                canRecieveDmg = false;
+            }
+
+            if (health <= 0) Death();
+        }
+
+        private void Death()
+        {
+            gameObject.transform.position = respawnPosition.position;
+            gameObject.GetComponent<PlayerController>().isDead = true;
+            health = 7f;
         }
     }
 }

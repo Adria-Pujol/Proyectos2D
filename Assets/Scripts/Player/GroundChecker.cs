@@ -1,42 +1,30 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class GroundChecker : MonoBehaviour
+namespace Player
 {
-    public bool isGrounded;
-    public bool isTopWalled;
-
-    private void OnTriggerEnter2D(Collider2D collision)
+    public class GroundChecker : MonoBehaviour
     {
-        if (collision.CompareTag("Ground"))
+        public bool isGrounded;
+        public bool isTopWalled;
+
+        private void OnTriggerEnter2D(Collider2D collision)
         {
-            isGrounded = true;
+            if (collision.CompareTag("Ground")) isGrounded = true;
+
+            if (collision.CompareTag("Wall")) isTopWalled = true;
         }
 
-        if (collision.CompareTag("Wall"))
+        private void OnTriggerExit2D(Collider2D collision)
         {
-            isTopWalled = true;
-        }
-    }
-
-    private void OnTriggerStay2D(Collider2D collision)
-    {
-        if (collision.CompareTag("Ground"))
-        {
-            isGrounded = true;
+            isGrounded = false;
+            isTopWalled = false;
         }
 
-        if (collision.CompareTag("Wall"))
+        private void OnTriggerStay2D(Collider2D collision)
         {
-            isTopWalled = true;
-        }
-    }
+            if (collision.CompareTag("Ground")) isGrounded = true;
 
-    private void OnTriggerExit2D(Collider2D collision)
-    {
-        isGrounded = false;
-        isTopWalled = false;
+            if (collision.CompareTag("Wall")) isTopWalled = true;
+        }
     }
 }

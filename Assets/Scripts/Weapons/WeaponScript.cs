@@ -1,5 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
+using Player;
 using UnityEngine;
 
 public class WeaponScript : MonoBehaviour
@@ -9,6 +8,6 @@ public class WeaponScript : MonoBehaviour
     // Update is called once per frame
     public void Shoot()
     {
-        BulletPooler.Instance.SpawnFromPool("Bullet", firePoint.position, firePoint.rotation); 
+        BulletPooler.instance.SpawnFromPool("Bullet", firePoint.position, firePoint.rotation);
     }
 }

@@ -1,21 +1,21 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class WallChecker : MonoBehaviour
+namespace Player
 {
-    [SerializeField]
-    private LayerMask wallLayer;
-    
-    public bool isWall;
-
-    private void OnTriggerStay2D(Collider2D collision)
+    public class WallChecker : MonoBehaviour
     {
-        isWall = collision != null && (((1 << collision.gameObject.layer) & wallLayer) != 0);
-    }
+        [SerializeField] private LayerMask wallLayer;
 
-    private void OnTriggerExit2D(Collider2D collision)
-    {
-        isWall = false;
+        public bool isWall;
+
+        private void OnTriggerExit2D(Collider2D collision)
+        {
+            isWall = false;
+        }
+
+        private void OnTriggerStay2D(Collider2D collision)
+        {
+            isWall = collision != null && ((1 << collision.gameObject.layer) & wallLayer) != 0;
+        }
     }
 }

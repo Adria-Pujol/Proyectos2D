@@ -1,67 +1,69 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BulletPooler : MonoBehaviour
+namespace Player
 {
-    [System.Serializable]    
-    public class ObjectPool
+    public class BulletPooler : MonoBehaviour
     {
-        public string nameOfObjPool;
-        public GameObject prefab;
-        public int poolSize;
-    }
-    //Singleton
-    public static BulletPooler Instance;
+        //Singleton
+        public static BulletPooler instance;
 
-    private void Awake()
-    {
-        Instance = this;
-    }
+        //Code
+        public List<ObjectPool> poolsList;
+        private Dictionary<string, Queue<GameObject>> _poolDictionary;
 
-    //Code
-    public List<ObjectPool> poolsList;
-    public Dictionary<string, Queue<GameObject>> poolDictionary;
-
-    void Start()
-    {
-        poolDictionary = new Dictionary<string, Queue<GameObject>>();
-        
-        //Create the pool
-        foreach(ObjectPool p in poolsList)
+        private void Awake()
         {
-            Queue<GameObject> poolObject = new Queue<GameObject>();
+            instance = this;
+        }
 
-            //Instantiate the obj of the pool deactive
-            for (int i = 0; i < p.poolSize; i++)
+        private void Start()
+        {
+            _poolDictionary = new Dictionary<string, Queue<GameObject>>();
+
+            //Create the pool
+            foreach (var p in poolsList)
             {
-                GameObject obj = Instantiate(p.prefab);
-                obj.SetActive(false);
-                poolObject.Enqueue(obj);
+                var poolObject = new Queue<GameObject>();
+
+                //Instantiate the obj of the pool deactive
+                for (var i = 0; i < p.poolSize; i++)
+                {
+                    var obj = Instantiate(p.prefab);
+                    obj.SetActive(false);
+                    poolObject.Enqueue(obj);
+                }
+
+                _poolDictionary.Add(p.nameOfObjPool, poolObject);
+            }
+        }
+
+        //Take an obj from the pool and spawn it
+        public GameObject SpawnFromPool(string nameOfObjPool, Vector2 pos, Quaternion rotation)
+        {
+            if (_poolDictionary.ContainsKey(nameOfObjPool))
+            {
+                var objToSpawn = _poolDictionary[nameOfObjPool].Dequeue();
+
+                objToSpawn.SetActive(true);
+                objToSpawn.transform.position = pos;
+                objToSpawn.transform.rotation = rotation;
+
+                _poolDictionary[nameOfObjPool].Enqueue(objToSpawn);
+                return objToSpawn;
             }
 
-            poolDictionary.Add(p.nameOfObjPool, poolObject);
-        }
-    }
-
-    //Take an obj from the pool and spawn it
-    public GameObject SpawnFromPool (string nameOfObjPool, Vector2 pos, Quaternion rotation)
-    {
-        if (poolDictionary.ContainsKey(nameOfObjPool))
-        {
-            GameObject objToSpawn = poolDictionary[nameOfObjPool].Dequeue();
-
-            objToSpawn.SetActive(true);
-            objToSpawn.transform.position = pos;
-            objToSpawn.transform.rotation = rotation;
-
-            poolDictionary[nameOfObjPool].Enqueue(objToSpawn);
-            return objToSpawn;
-        }
-        else
-        {
             Debug.LogWarning("Pool with the name: " + nameOfObjPool + " does not exist.");
             return null;
-        }        
+        }
+
+        [Serializable]
+        public class ObjectPool
+        {
+            public string nameOfObjPool;
+            public GameObject prefab;
+            public int poolSize;
+        }
     }
 }

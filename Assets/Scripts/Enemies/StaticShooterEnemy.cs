@@ -1,35 +1,37 @@
-using System.Collections;
-using System.Collections.Generic;
+using Player;
 using UnityEngine;
 
-public class StaticShooterEnemy : MonoBehaviour
+namespace Enemies
 {
-    [SerializeField]
-    public float timer;
-    public float timeBetweenShoots;
-
-    public Transform firePoint;
-
-    void Awake()
+    public class StaticShooterEnemy : MonoBehaviour
     {
-        timer = timeBetweenShoots;
-    }
+        [SerializeField] public float timer;
 
-    void FixedUpdate()
-    {
-        if (timer < 0)
+        public float timeBetweenShoots;
+
+        public Transform firePoint;
+
+        private void Awake()
         {
-            Shoot();
             timer = timeBetweenShoots;
         }
-        else
-        {
-            timer -= Time.deltaTime;
-        }
-    }
 
-    void Shoot()
-    {
-        BulletPooler.Instance.SpawnFromPool("EnemyBullet", firePoint.position, firePoint.rotation);
+        private void FixedUpdate()
+        {
+            if (timer < 0)
+            {
+                Shoot();
+                timer = timeBetweenShoots;
+            }
+            else
+            {
+                timer -= Time.deltaTime;
+            }
+        }
+
+        private void Shoot()
+        {
+            BulletPooler.instance.SpawnFromPool("EnemyBullet", firePoint.position, firePoint.rotation);
+        }
     }
 }

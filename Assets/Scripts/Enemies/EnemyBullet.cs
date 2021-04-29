@@ -1,82 +1,77 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
+using Player;
 using UnityEngine;
 
-public class EnemyBullet : MonoBehaviour
+namespace Enemies
 {
-    [SerializeField]
-    float bulletSpeed = 20f;
-    [SerializeField]
-    float bulletDamage = 1f;
-    [SerializeField]
-    Rigidbody2D body;
-    [SerializeField]
-    float timeAlive = 1.5f;
-    float timer;
-    [SerializeField]
-    float timeAliveFromCollision;
-    float timerCollision;
-    [SerializeField]
-    public GameObject weapon;
-    public LayerMask groundLayer;
-
-    void Start()
+    public class EnemyBullet : MonoBehaviour
     {
-        timer = timeAlive;
-        timerCollision = timeAliveFromCollision;
-    }
+        [SerializeField] private float bulletSpeed = 20f;
 
-    private void OnEnable()
-    {
-        body.velocity = transform.right * bulletSpeed;
-    }
+        [SerializeField] private float bulletDamage = 1f;
 
-    private void FixedUpdate()
-    {
-        if (gameObject.activeInHierarchy)
+        [SerializeField] private Rigidbody2D body;
+
+        [SerializeField] private float timeAlive = 1.5f;
+
+        [SerializeField] private float timeAliveFromCollision;
+
+        [SerializeField] public GameObject weapon;
+
+        public LayerMask groundLayer;
+        private float _timer;
+        private float _timerCollision;
+
+        private void Start()
         {
-            body.velocity = transform.right * bulletSpeed;
+            _timer = timeAlive;
+            _timerCollision = timeAliveFromCollision;
         }
-        if (timer > 0)
-        {
-            timer -= Time.deltaTime;
-        }
-        else
-        {
-            gameObject.SetActive(false);
-            timer = timeAlive;
-        }
-    }
 
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.CompareTag("Player"))
+        private void FixedUpdate()
         {
-            PlayerHealth playerHP = collision.GetComponent<PlayerHealth>();
-            PlayerController player = collision.GetComponent<PlayerController>();
-
-            if (playerHP != null)
+            if (gameObject.activeInHierarchy) body.velocity = transform.right * bulletSpeed;
+            if (_timer > 0)
             {
-                playerHP.TakeDamage(bulletDamage);
-                player.MakeConfusion();
-            }
-            gameObject.SetActive(false);
-        }
-        if (collision.CompareTag("Ground"))
-        {
-            gameObject.SetActive(false);
-        }
-        if (collision.CompareTag("Object"))
-        {
-            if (timerCollision > 0)
-            {
-                timerCollision -= Time.deltaTime;
+                _timer -= Time.deltaTime;
             }
             else
             {
                 gameObject.SetActive(false);
-                timerCollision = timeAliveFromCollision;
+                _timer = timeAlive;
+            }
+        }
+
+        private void OnEnable()
+        {
+            body.velocity = transform.right * bulletSpeed;
+        }
+
+        private void OnTriggerEnter2D(Collider2D collision)
+        {
+            if (collision.CompareTag("Player"))
+            {
+                var playerHp = collision.GetComponent<PlayerHealth>();
+                var player = collision.GetComponent<PlayerController>();
+
+                if (playerHp != null)
+                {
+                    playerHp.TakeDamage(bulletDamage);
+                    player.MakeConfusion();
+                }
+
+                gameObject.SetActive(false);
+            }
+
+            if (collision.CompareTag("Ground")) gameObject.SetActive(false);
+            if (!collision.CompareTag("Object")) return;
+            if (_timerCollision > 0)
+            {
+                _timerCollision -= Time.deltaTime;
+            }
+            else
+            {
+                gameObject.SetActive(false);
+                _timerCollision = timeAliveFromCollision;
             }
         }
     }

@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 namespace Enemies
@@ -11,26 +10,9 @@ namespace Enemies
 
         private void OnTriggerEnter2D(Collider2D collision)
         {
-            if (collision.CompareTag("Wall"))
-            {
-                isWall = true;
-            }
-            if (collision.CompareTag("Object"))
-            {
-                isObject = true;
-            }
-            if (collision.CompareTag("Enemy"))
-            {
-                isEnemy = true;
-            }
-        }
-
-        private void OnTriggerStay2D(Collider2D collision)
-        {
-            if (collision.CompareTag("Wall"))
-            {
-                isWall = true;
-            }
+            if (collision.CompareTag("Wall")) isWall = true;
+            if (collision.CompareTag("Object")) isObject = true;
+            if (collision.CompareTag("Enemy")) isEnemy = true;
         }
 
         private void OnTriggerExit2D(Collider2D collision)
@@ -38,6 +20,11 @@ namespace Enemies
             isWall = false;
             isObject = false;
             isEnemy = false;
+        }
+
+        private void OnTriggerStay2D(Collider2D collision)
+        {
+            if (collision.CompareTag("Wall")) isWall = true;
         }
     }
 }
