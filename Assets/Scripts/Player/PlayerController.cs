@@ -36,6 +36,7 @@ namespace Player
         [Header("Shooting")] [SerializeField] private bool isShooting;
 
         public float timerReset = 0.2f;
+        public int activeWeapon = 0;
 
         [Header("Melee")] [SerializeField] private bool isHitting;
 
@@ -156,7 +157,7 @@ namespace Player
                 _body.gravityScale = shortJumpMult;
 
             //Shooting
-            if (isShooting)
+            if (isShooting && activeWeapon == 0)
             {
                 if (_resetShooting)
                 {
@@ -184,6 +185,39 @@ namespace Player
                 {
                     _resetShooting = true;
                     timerReset = 0.2f;
+                }
+
+                timer = startTime;
+            }
+
+            if (isShooting && activeWeapon == 1)
+            {
+                if (_resetShooting)
+                {
+                    _weaponScript.Shoot();
+                    _resetShooting = false;
+                }
+
+                if (timer <= 0)
+                {
+                    _weaponScript.Shoot();
+                    timer = startTime;
+                }
+                else
+                {
+                    timer -= Time.deltaTime;
+                }
+            }
+            else
+            {
+                if (timerReset > 0)
+                {
+                    timerReset -= Time.deltaTime;
+                }
+                else
+                {
+                    _resetShooting = true;
+                    timerReset = 0.05f;
                 }
 
                 timer = startTime;
