@@ -37,6 +37,9 @@ namespace Player
 
         public float timerReset = 0.2f;
         public int activeWeapon = 1;
+        public bool hasSwapped = false;
+        public float swapTime;
+        public float totalSwapTime;
 
         [Header("Melee")] [SerializeField] private bool isHitting;
 
@@ -47,6 +50,7 @@ namespace Player
         public bool isWall;
         public bool isShifting;
         public bool isDead;
+        public bool isSwapping;
 
         [Header("Confusion State")] public bool confusionState;
 
@@ -72,9 +76,11 @@ namespace Player
             _input.Player.Jump.canceled += ctx => Jump(ctx);
             _input.Player.Shoot.performed += ctx => Shoot(ctx);
             _input.Player.Melee.performed += ctx => Melee(ctx);
-            _input.Player.GrabWall.performed += ctx => Shift(ctx);
-            _input.Player.Dash.performed += ctx => Control(ctx);
+            _input.Player.GrabWall.performed += ctx => GrabWall(ctx);
+            _input.Player.Dash.performed += ctx => Dash(ctx);
+            _input.Player.SwapWeapon.performed += ctx => SwapWeapon(ctx);
             timer = startTime;
+            swapTime = totalSwapTime;
             _body = GetComponent<Rigidbody2D>();
             _groundChecker1 = transform.Find("GroundChecker").GetComponent<GroundChecker>();
             _groundChecker = transform.Find("GroundChecker").GetComponent<GroundChecker>();
@@ -223,6 +229,31 @@ namespace Player
                 timer = startTime;
             }
 
+            if (isSwapping)
+            {
+                if (!hasSwapped && swapTime < 0)
+                {
+                    if (activeWeapon == 1)
+                    {
+                        activeWeapon = 0;
+                    }
+                    else
+                    {
+                        activeWeapon++;
+                    }
+                    hasSwapped = true;
+                    swapTime = totalSwapTime;
+                }
+                else
+                {
+                    hasSwapped = false;
+                }
+            }
+            else
+            {
+                swapTime -= Time.deltaTime;
+            }
+
             //Wall 
             switch (isWall)
             {
@@ -321,14 +352,19 @@ namespace Player
             isHitting = ctx.ReadValue<float>() != 0;
         }
 
-        private void Shift(InputAction.CallbackContext ctx)
+        private void GrabWall(InputAction.CallbackContext ctx)
         {
             isShifting = ctx.ReadValue<float>() != 0;
         }
 
-        private void Control(InputAction.CallbackContext ctx)
+        private void Dash(InputAction.CallbackContext ctx)
         {
             _isDashing = ctx.ReadValue<float>() != 0;
+        }
+
+        private void SwapWeapon(InputAction.CallbackContext ctx)
+        {
+            isSwapping = ctx.ReadValue<float>() != 0;
         }
 
         public void MakeConfusion()
