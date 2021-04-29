@@ -135,9 +135,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bulletSpeed: 20
-  bulletDamage: 20
+  bulletDamage: 1
   body: {fileID: 9082880966041955918}
   timeAlive: 5
+  timeAliveFromCollision: 0.01
   weapon: {fileID: 4387036830735832729, guid: c2e2935d11d4a4b459ede18d77669664, type: 3}
   groundLayer:
     serializedVersion: 2

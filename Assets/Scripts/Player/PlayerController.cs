@@ -48,6 +48,12 @@ public class PlayerController : MonoBehaviour
     bool isShooting;
     bool resetShooting = true;
     public float timerReset = 0.2f;
+    
+    [Header("Melee")]
+    [SerializeField]
+    bool isHitting;
+    [SerializeField]
+    bool hasBeenPressed = false;
 
     [Header("Booleans")]       
     [SerializeField]
@@ -91,7 +97,7 @@ public class PlayerController : MonoBehaviour
     private void MovementLeftRight(InputAction.CallbackContext ctx)
     {
         movInputCtx = ctx.ReadValue<float>();
-        if((isFacingRight && movInputCtx == -1) || (!isFacingRight && movInputCtx == 1))
+        if((isFacingRight && movInputCtx < 0) || (!isFacingRight && movInputCtx > 0))
         {
             Flip();
         }
@@ -116,7 +122,7 @@ public class PlayerController : MonoBehaviour
 
     private void Melee(InputAction.CallbackContext ctx)
     {
-        throw new NotImplementedException();
+        isHitting = ctx.ReadValue<float>() == 0 ? false : true;
     }
 
     private void Shift(InputAction.CallbackContext ctx)
@@ -133,6 +139,7 @@ public class PlayerController : MonoBehaviour
     {
         //Checking if player is in Ground
         isGround = transform.Find("GroundChecker").GetComponent<GroundChecker>().isGrounded;
+        //Checking if player is in TopWall
         isTopWall = transform.Find("GroundChecker").GetComponent<GroundChecker>().isTopWalled;
         //Checking if player is in Wall
         isWall = transform.Find("WallChecker").GetComponent<WallChecker>().isWall;
@@ -293,11 +300,33 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public void OnTriggerStay2D(Collider2D collision)
+    {
+        //Flip Object
+        if (collision.CompareTag("Object"))
+        {
+            if (isHitting && !hasBeenPressed)
+            {
+                Transform objTransform = collision.GetComponent<Transform>();
+                objTransform.rotation = new Quaternion(objTransform.rotation.x, objTransform.rotation.y, -90,
+                    -90);
+                hasBeenPressed = true;
+            }
+        }
+    }
+
+    public void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Object"))
+        {
+            hasBeenPressed = false;
+        }
+    }
+
     public void MakeConfusion()
     {
         confusionState = true;
         confusionTimer = confusionTotalTime;
-        Debug.Log("Dong");
     }
 
     private void Flip()

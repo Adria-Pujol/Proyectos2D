@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,12 +8,15 @@ public class EnemyBullet : MonoBehaviour
     [SerializeField]
     float bulletSpeed = 20f;
     [SerializeField]
-    float bulletDamage = 20f;
+    float bulletDamage = 1f;
     [SerializeField]
     Rigidbody2D body;
     [SerializeField]
     float timeAlive = 1.5f;
     float timer;
+    [SerializeField]
+    float timeAliveFromCollision;
+    float timerCollision;
     [SerializeField]
     public GameObject weapon;
     public LayerMask groundLayer;
@@ -20,6 +24,7 @@ public class EnemyBullet : MonoBehaviour
     void Start()
     {
         timer = timeAlive;
+        timerCollision = timeAliveFromCollision;
     }
 
     private void OnEnable()
@@ -61,6 +66,18 @@ public class EnemyBullet : MonoBehaviour
         if (collision.CompareTag("Ground"))
         {
             gameObject.SetActive(false);
+        }
+        if (collision.CompareTag("Object"))
+        {
+            if (timerCollision > 0)
+            {
+                timerCollision -= Time.deltaTime;
+            }
+            else
+            {
+                gameObject.SetActive(false);
+                timerCollision = timeAliveFromCollision;
+            }
         }
     }
 }
