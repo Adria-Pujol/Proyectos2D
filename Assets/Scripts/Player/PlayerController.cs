@@ -37,9 +37,10 @@ namespace Player
 
         public float timerReset = 0.2f;
         public int activeWeapon = 1;
-        public bool hasSwapped = false;
+        public bool hasSwapped;
         public float swapTime;
         public float totalSwapTime;
+        public float ammunation;
 
         [Header("Melee")] [SerializeField] private bool isHitting;
 
@@ -57,16 +58,16 @@ namespace Player
         public float confusionTimer;
         public float confusionTotalTime;
         private Rigidbody2D _body;
+        private GroundChecker _groundChecker;
+        private GroundChecker _groundChecker1;
         private bool _hasDashed;
         private InputPlayer _input;
         private bool _isDashing;
         private bool _isTopWall;
         private float _movInputCtx;
         private bool _resetShooting = true;
-        private WeaponScript _weaponScript;
         private WallChecker _wallChecker;
-        private GroundChecker _groundChecker;
-        private GroundChecker _groundChecker1;
+        private WeaponScript _weaponScript;
 
         private void Awake()
         {
@@ -156,7 +157,8 @@ namespace Player
             }
 
             //Jumping
-            if (isGround && isJumping || _isTopWall && isJumping) _body.velocity = new Vector2(_body.velocity.x, jumpVel);
+            if (isGround && isJumping || _isTopWall && isJumping)
+                _body.velocity = new Vector2(_body.velocity.x, jumpVel);
             if (isJumping && _body.velocity.y > 0)
                 _body.gravityScale = fallMult;
             else
@@ -165,20 +167,25 @@ namespace Player
             //Shooting
             if (isShooting && activeWeapon == 0)
             {
-                if (_resetShooting)
+                if (ammunation > 0)
                 {
-                    _weaponScript.Shoot();
-                    _resetShooting = false;
-                }
+                    if (_resetShooting)
+                    {
+                        _weaponScript.Shoot();
+                        ammunation -= 1;
+                        _resetShooting = false;
+                    }
 
-                if (timer <= 0)
-                {
-                    _weaponScript.Shoot();
-                    timer = startTime;
-                }
-                else
-                {
-                    timer -= Time.deltaTime;
+                    if (timer <= 0)
+                    {
+                        _weaponScript.Shoot();
+                        ammunation -= 1;
+                        timer = startTime;
+                    }
+                    else
+                    {
+                        timer -= Time.deltaTime;
+                    }
                 }
             }
             else
@@ -234,13 +241,9 @@ namespace Player
                 if (!hasSwapped && swapTime < 0)
                 {
                     if (activeWeapon == 1)
-                    {
                         activeWeapon = 0;
-                    }
                     else
-                    {
                         activeWeapon++;
-                    }
                     hasSwapped = true;
                     swapTime = totalSwapTime;
                 }

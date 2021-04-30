@@ -13,6 +13,7 @@ namespace Enemies
         [SerializeField] private bool isObject;
 
         [SerializeField] private bool isEnemy;
+        public Transform shootingPoint;
 
         private Rigidbody2D _body;
 
@@ -20,7 +21,6 @@ namespace Enemies
         private EnemyGroundChecker _groundChecker;
         private bool _isFacingRight = true;
         private Transform _player;
-        public Transform shootingPoint;
 
         public void Awake()
         {
@@ -44,9 +44,7 @@ namespace Enemies
             //Checking if enemy is colliding to an Enemy
             isEnemy = _generalChecker.isEnemy;
             if (_player)
-            {
                 _body.velocity = new Vector2(0, _body.velocity.y);
-            }
             else
                 Patrol();
         }

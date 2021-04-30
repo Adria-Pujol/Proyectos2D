@@ -137,9 +137,8 @@ MonoBehaviour:
   bulletSpeed: 20
   bulletDamage: 1
   body: {fileID: 9082880966041955918}
-  timeAlive: 5
-  timeAliveFromCollision: 0.03
-  weapon: {fileID: 4387036830735832729, guid: c2e2935d11d4a4b459ede18d77669664, type: 3}
   groundLayer:
     serializedVersion: 2
     m_Bits: 64
+  timeAlive: 5
+  timeAliveFromCollision: 0.02

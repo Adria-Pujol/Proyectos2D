@@ -282,10 +282,18 @@ MonoBehaviour:
   wallTimer: 0
   isShooting: 0
   timerReset: 0.1
+  activeWeapon: 1
+  hasSwapped: 0
+  swapTime: 0
+  totalSwapTime: 0.5
+  ammunation: 20
+  isHitting: 0
+  hasBeenPressed: 0
   isGround: 0
   isWall: 0
   isShifting: 0
   isDead: 0
+  isSwapping: 0
   confusionState: 0
   confusionTimer: 0
   confusionTotalTime: 2
@@ -318,6 +326,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 7
+  knockback: 500
   invulnerableTotalTime: 2
   invulnerableCurrentTime: 0
   canRecieveDmg: 0
@@ -392,12 +401,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ab1dc1d7a32eca4cb995a5df52d7987, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 64
-  wallLayer:
-    serializedVersion: 2
-    m_Bits: 128
   isGrounded: 0
   isTopWalled: 0
 --- !u!1 &8660466645087070267

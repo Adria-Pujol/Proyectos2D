@@ -1,25 +1,38 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using Enemies;
+using UnityEngine;
 
 public class BulletScript : MonoBehaviour
 {
-    [SerializeField]
-    float bulletSpeed = 20f;
-    [SerializeField]
-    float bulletDamage = 20f;
-    [SerializeField]
-    Rigidbody2D body;
-    [SerializeField]
-    float timeAlive = 5f;
-    float timer;
-    [SerializeField]
-    public GameObject weapon;
+    [SerializeField] private float bulletSpeed = 20f;
 
-    void Start()
+    [SerializeField] private float bulletDamage = 20f;
+
+    [SerializeField] private Rigidbody2D body;
+
+    [SerializeField] private float _timer;
+
+    [SerializeField] private float timeAlive = 1.5f;
+    [SerializeField] private float timeAliveFromCollision;
+    private float _timerCollision;
+
+    private void Start()
     {
-        timer = timeAlive;        
+        _timer = timeAlive;
+        _timerCollision = timeAliveFromCollision;
+    }
+
+    private void FixedUpdate()
+    {
+        if (gameObject.activeInHierarchy) body.velocity = transform.right * bulletSpeed;
+        if (_timer > 0)
+        {
+            _timer -= Time.deltaTime;
+        }
+        else
+        {
+            gameObject.SetActive(false);
+            _timer = timeAlive;
+        }
     }
 
     private void OnEnable()
@@ -27,38 +40,29 @@ public class BulletScript : MonoBehaviour
         body.velocity = transform.right * bulletSpeed;
     }
 
-    private void FixedUpdate()
-    {
-        if (gameObject.activeInHierarchy)
-        {
-            body.velocity = transform.right * bulletSpeed;
-        }
-        if (timer > 0)
-        {
-            timer -= Time.deltaTime;
-        }
-        else
-        {
-            gameObject.SetActive(false);
-            timer = timeAlive;
-        }
-    }
-
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Enemy"))
         {
-            Enemy enemy = collision.GetComponent<Enemy>();
+            var enemy = collision.GetComponent<Enemy>();
 
-            if (enemy != null)
-            {
-                enemy.TakeDamage(bulletDamage);
-            }
+            if (enemy != null) enemy.TakeDamage(bulletDamage);
             gameObject.SetActive(false);
         }
-        if (collision.CompareTag("Ground"))
+
+        if (collision.CompareTag("Ground")) gameObject.SetActive(false);
+
+        if (collision.CompareTag("Object"))
         {
-            gameObject.SetActive(false);
+            if (_timerCollision > 0)
+            {
+                _timerCollision -= Time.deltaTime;
+            }
+            else
+            {
+                gameObject.SetActive(false);
+                _timerCollision = timeAliveFromCollision;
+            }
         }
     }
 }

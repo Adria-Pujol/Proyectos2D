@@ -11,13 +11,9 @@ namespace Enemies
 
         [SerializeField] private Rigidbody2D body;
 
-        [SerializeField] private float timeAlive = 1.5f;
-
-        [SerializeField] private float timeAliveFromCollision;
-
-        [SerializeField] public GameObject weapon;
-
         public LayerMask groundLayer;
+        [SerializeField] private float timeAlive = 1.5f;
+        [SerializeField] private float timeAliveFromCollision;
         private float _timer;
         private float _timerCollision;
 
@@ -63,15 +59,17 @@ namespace Enemies
             }
 
             if (collision.CompareTag("Ground")) gameObject.SetActive(false);
-            if (!collision.CompareTag("Object")) return;
-            if (_timerCollision > 0)
+            if (collision.CompareTag("Object"))
             {
-                _timerCollision -= Time.deltaTime;
-            }
-            else
-            {
-                gameObject.SetActive(false);
-                _timerCollision = timeAliveFromCollision;
+                if (_timerCollision > 0)
+                {
+                    _timerCollision -= Time.deltaTime;
+                }
+                else
+                {
+                    gameObject.SetActive(false);
+                    _timerCollision = timeAliveFromCollision;
+                }
             }
         }
     }

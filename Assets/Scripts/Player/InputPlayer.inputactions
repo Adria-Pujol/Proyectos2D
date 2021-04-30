@@ -110,7 +110,7 @@
                 {
                     "name": "negative",
                     "id": "c6c2d37e-b5f2-431a-ae8b-206c3e665e39",
-                    "path": "<Gamepad>/leftStick/left",
+                    "path": "<Gamepad>/dpad/left",
                     "interactions": "",
                     "processors": "",
                     "groups": "PlayerScheme",
@@ -121,7 +121,7 @@
                 {
                     "name": "positive",
                     "id": "a723dcb5-e165-42a6-ba4c-a331327a705d",
-                    "path": "<Gamepad>/leftStick/right",
+                    "path": "<Gamepad>/dpad/right",
                     "interactions": "",
                     "processors": "",
                     "groups": "PlayerScheme",
@@ -253,7 +253,7 @@
                 {
                     "name": "",
                     "id": "6554fd18-2aa9-4957-8b9a-4a0b3259abf3",
-                    "path": "<Gamepad>/buttonWest",
+                    "path": "<Gamepad>/buttonEast",
                     "interactions": "",
                     "processors": "",
                     "groups": "PlayerScheme",

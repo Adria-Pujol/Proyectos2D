@@ -137,5 +137,6 @@ MonoBehaviour:
   bulletSpeed: 20
   bulletDamage: 20
   body: {fileID: 2813966152927143185}
+  _timer: 0
   timeAlive: 5
-  timeAliveFromCollision: 0.03
+  timeAliveFromCollision: 0.02
